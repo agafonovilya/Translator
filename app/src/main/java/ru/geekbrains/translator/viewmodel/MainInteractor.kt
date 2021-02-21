@@ -1,11 +1,11 @@
-package ru.geekbrains.translator.view.main
+package ru.geekbrains.translator.viewmodel
 
 
 import io.reactivex.Observable
 import ru.geekbrains.translator.model.data.AppState
 import ru.geekbrains.translator.model.data.DataModel
 import ru.geekbrains.translator.model.repository.Repository
-import ru.geekbrains.translator.presenter.Interactor
+import ru.geekbrains.translator.viewmodel.Interactor
 
 class MainInteractor(
     private val remoteRepository: Repository<List<DataModel>>,
