@@ -5,10 +5,9 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.Toast
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
-import ru.geekbrains.translator.App
+import org.koin.android.viewmodel.ext.android.viewModel
 import ru.geekbrains.translator.R
 import ru.geekbrains.translator.model.data.AppState
 import ru.geekbrains.translator.model.data.DataModel
@@ -16,12 +15,8 @@ import ru.geekbrains.translator.utils.network.isOnline
 import ru.geekbrains.translator.view.base.BaseActivity
 import ru.geekbrains.translator.view.main.adapter.MainAdapter
 import ru.geekbrains.translator.viewmodel.MainViewModel
-import javax.inject.Inject
 
 class MainActivity : BaseActivity<AppState>() {
-
-    @Inject
-    internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
     override lateinit var viewModel: MainViewModel
 
@@ -52,16 +47,18 @@ class MainActivity : BaseActivity<AppState>() {
             }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        App.instance.appComponent.inject(this)
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        viewModel = viewModelFactory.create(MainViewModel::class.java)
-        viewModel.viewState.observe(this@MainActivity, Observer<AppState> { renderData(it) })
+        check(main_activity_recyclerview.adapter == null) { "The ViewModel should be initialised first" }
+        val vm: MainViewModel by viewModel()
+        viewModel = vm
+        viewModel.subscribe().observe(this@MainActivity, Observer<AppState> { renderData(it) })
+
         search_fab.setOnClickListener(fabClickListener)
         main_activity_recyclerview.layoutManager = LinearLayoutManager(applicationContext)
         main_activity_recyclerview.adapter = adapter
+
     }
 
     override fun renderData(appState: AppState) {
