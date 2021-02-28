@@ -1,8 +1,8 @@
-package ru.geekbrains.translator.model.datasource
+package ru.geekbrains.translator.model.repository
 
 import ru.geekbrains.translator.model.data.AppState
 
-interface DataSourceLocal<T> : DataSource<T> {
+interface RepositoryLocal<T> : Repository<T> {
 
     suspend fun saveToDB(appState: AppState)
     suspend fun getData(): T
