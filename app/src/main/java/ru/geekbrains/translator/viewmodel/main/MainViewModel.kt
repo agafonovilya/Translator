@@ -1,4 +1,4 @@
-package ru.geekbrains.translator.viewmodel
+package ru.geekbrains.translator.viewmodel.main
 
 import androidx.lifecycle.LiveData
 import kotlinx.coroutines.Dispatchers
@@ -6,6 +6,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.geekbrains.translator.model.data.AppState
 import ru.geekbrains.translator.utils.parseSearchResults
+import ru.geekbrains.translator.viewmodel.BaseViewModel
 
 
 class MainViewModel (private val interactor: MainInteractor) :
@@ -17,7 +18,7 @@ class MainViewModel (private val interactor: MainInteractor) :
         return liveDataForViewToObserve
     }
 
-    override fun getData(word: String, isOnline: Boolean) {
+    fun getData(word: String, isOnline: Boolean) {
         _mutableLiveData.value = AppState.Loading(null)
         cancelJob()
         viewModelCoroutineScope.launch { startInteractor(word, isOnline) }

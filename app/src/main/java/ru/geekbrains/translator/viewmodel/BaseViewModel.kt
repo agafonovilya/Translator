@@ -25,7 +25,7 @@ abstract class BaseViewModel<T : AppState>(
         viewModelCoroutineScope.coroutineContext.cancelChildren()
     }
 
-    abstract fun getData(word: String, isOnline: Boolean)
+    //abstract fun getData(word: String, isOnline: Boolean)
 
     abstract fun handleError(error: Throwable)
 }

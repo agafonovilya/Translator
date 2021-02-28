@@ -15,4 +15,7 @@
         internet connection.
     </string>
     <string name="dialog_tittle_sorry">Sorry</string>
+    <string name="image_stub">image</string>
+    <string name="menu_title_history">History</string>
+    <string name="button_history_search">Search in history</string>
 </resources>
