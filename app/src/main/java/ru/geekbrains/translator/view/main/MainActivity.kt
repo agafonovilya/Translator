@@ -4,25 +4,20 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View.GONE
-import android.view.View.VISIBLE
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.viewmodel.ext.android.viewModel
 import ru.geekbrains.translator.R
-import ru.geekbrains.translator.model.data.AppState
-import ru.geekbrains.translator.model.data.DataModel
+import ru.geekbrains.model.data.AppState
+import ru.geekbrains.model.data.DataModel
 import ru.geekbrains.translator.utils.convertMeaningsToString
-import ru.geekbrains.translator.utils.network.isOnline
-import ru.geekbrains.translator.view.base.BaseActivity
+import ru.geekbrains.utils.network.isOnline
 import ru.geekbrains.translator.view.description.DescriptionActivity
-import ru.geekbrains.translator.view.history.HistoryActivity
+import ru.geekbrains.historyscreen.view.HistoryActivity
 import ru.geekbrains.translator.view.main.adapter.MainAdapter
-import ru.geekbrains.translator.viewmodel.main.MainInteractor
-import ru.geekbrains.translator.viewmodel.main.MainViewModel
 
-class MainActivity : BaseActivity<AppState>() {
+class MainActivity : ru.geekbrains.core.BaseActivity<AppState>() {
 
     override lateinit var viewModel: MainViewModel
 
@@ -43,7 +38,7 @@ class MainActivity : BaseActivity<AppState>() {
                             this@MainActivity,
                             data.text!!,
                             convertMeaningsToString(data.meanings!!),
-                            data.meanings[0].imageUrl
+                            data.meanings!![0].imageUrl
                         )
                     )
 
@@ -61,8 +56,8 @@ class MainActivity : BaseActivity<AppState>() {
                 }
             }
 
-    private val onHistorySearchClickListener: SearchHistoryDialogFragment.OnSearchClickListener =
-        object : SearchHistoryDialogFragment.OnSearchClickListener {
+    private val onHistorySearchClickListener: ru.geekbrains.historyscreen.view.SearchHistoryDialogFragment.OnSearchClickListener =
+        object : ru.geekbrains.historyscreen.view.SearchHistoryDialogFragment.OnSearchClickListener {
             override fun onClick(searchWord: String) {
                 viewModel.getData(searchWord, false)
             }
@@ -96,7 +91,7 @@ class MainActivity : BaseActivity<AppState>() {
                 true
             }
             R.id.menu_history_find -> {
-                val searchHistoryDialogFragment = SearchHistoryDialogFragment.newInstance()
+                val searchHistoryDialogFragment = ru.geekbrains.historyscreen.view.SearchHistoryDialogFragment.newInstance()
                 searchHistoryDialogFragment.setOnSearchClickListener(onHistorySearchClickListener)
                 searchHistoryDialogFragment.show(supportFragmentManager, BOTTOM_SHEET_FRAGMENT_DIALOG_TAG)
                 true

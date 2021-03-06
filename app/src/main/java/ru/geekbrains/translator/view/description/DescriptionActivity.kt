@@ -10,8 +10,8 @@ import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_description.*
 import ru.geekbrains.translator.R
-import ru.geekbrains.translator.utils.network.isOnline
-import ru.geekbrains.translator.utils.ui.AlertDialogFragment
+import ru.geekbrains.utils.network.isOnline
+import ru.geekbrains.utils.ui.AlertDialogFragment
 
 class DescriptionActivity : AppCompatActivity() {
 

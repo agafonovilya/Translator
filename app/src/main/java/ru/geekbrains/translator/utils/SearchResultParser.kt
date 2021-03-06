@@ -1,10 +1,8 @@
 package ru.geekbrains.translator.utils
 
-import ru.geekbrains.translator.model.data.AppState
-import ru.geekbrains.translator.model.data.DataModel
-import ru.geekbrains.translator.model.data.Meanings
-import ru.geekbrains.translator.model.data.Translation
-import ru.geekbrains.translator.model.room.HistoryEntity
+import ru.geekbrains.model.data.AppState
+import ru.geekbrains.model.data.DataModel
+import ru.geekbrains.model.data.Meanings
 
 fun parseSearchResults(state: AppState): AppState {
     val newSearchResults = arrayListOf<DataModel>()
@@ -25,8 +23,8 @@ fun parseSearchResults(state: AppState): AppState {
 private fun parseResult(dataModel: DataModel, newDataModels: ArrayList<DataModel>) {
     if (!dataModel.text.isNullOrBlank() && !dataModel.meanings.isNullOrEmpty()) {
         val newMeanings = arrayListOf<Meanings>()
-        for (meaning in dataModel.meanings) {
-            if (meaning.translation != null && !meaning.translation.translation.isNullOrBlank()) {
+        for (meaning in dataModel.meanings!!) {
+            if (meaning.translation != null && !meaning.translation!!.translation.isNullOrBlank()) {
                 newMeanings.add(Meanings(meaning.translation, meaning.imageUrl))
             }
         }
@@ -34,10 +32,6 @@ private fun parseResult(dataModel: DataModel, newDataModels: ArrayList<DataModel
             newDataModels.add(DataModel(dataModel.text, newMeanings))
         }
     }
-}
-
-fun parseLocalSearchResults(data: AppState): AppState {
-    return AppState.Success(mapResult(data, false))
 }
 
 private fun mapResult(
@@ -75,8 +69,8 @@ private fun getSuccessResultData(
 private fun parseOnlineResult(dataModel: DataModel, newDataModels: ArrayList<DataModel>) {
     if (!dataModel.text.isNullOrBlank() && !dataModel.meanings.isNullOrEmpty()) {
         val newMeanings = arrayListOf<Meanings>()
-        for (meaning in dataModel.meanings) {
-            if (meaning.translation != null && !meaning.translation.translation.isNullOrBlank()) {
+        for (meaning in dataModel.meanings!!) {
+            if (meaning.translation != null && !meaning.translation!!.translation.isNullOrBlank()) {
                 newMeanings.add(Meanings(meaning.translation, meaning.imageUrl))
             }
         }
@@ -96,31 +90,4 @@ fun convertMeaningsToString(meanings: List<Meanings>): String {
         }
     }
     return meaningsSeparatedByComma
-}
-
-fun mapHistoryEntityToSearchResult(list: List<HistoryEntity>): List<DataModel> {
-    val searchResult = ArrayList<DataModel>()
-    if (!list.isNullOrEmpty()) {
-        for (entity in list) {
-            searchResult.add(DataModel(entity.word, listOf(Meanings(Translation(entity.description), null))))
-        }
-    }
-    return searchResult
-}
-
-fun convertDataModelSuccessToEntity(appState: AppState): HistoryEntity? {
-    return when (appState) {
-        is AppState.Success -> {
-            val searchResult = appState.data
-            if (searchResult.isNullOrEmpty() || searchResult[0].text.isNullOrEmpty()) {
-                null
-            } else {
-                searchResult[0].meanings?.get(0)?.translation?.let {
-                    HistoryEntity(searchResult[0].text!!, searchResult[0].meanings!![0].translation!!.translation)
-                } ?: HistoryEntity(searchResult[0].text!!, null)
-
-            }
-        }
-        else -> null
-    }
 }
