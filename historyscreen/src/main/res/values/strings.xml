@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">history</string>
+    <string name="button_history_search">Search in history</string>
+    <string name="search_hint">New word</string>
+    <string name="delete_description">X</string>
+
+</resources>
