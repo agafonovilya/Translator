@@ -7,6 +7,8 @@ import ru.geekbrains.core.BaseActivity
 import ru.geekbrains.historyscreen.R
 import ru.geekbrains.model.data.AppState
 import org.koin.android.viewmodel.ext.android.viewModel
+import ru.geekbrains.historyscreen.injectDependencies
+import ru.geekbrains.model.data.DataModel
 
 
 class HistoryActivity : BaseActivity<AppState>() {
@@ -26,7 +28,7 @@ class HistoryActivity : BaseActivity<AppState>() {
         viewModel.getData()
     }
     // Вызовется из базовой Activity, когда данные будут готовы
-    override fun setDataToAdapter(data: List<ru.geekbrains.model.data.DataModel>) {
+    override fun setDataToAdapter(data: List<DataModel>) {
         adapter.setData(data)
     }
 
@@ -34,6 +36,7 @@ class HistoryActivity : BaseActivity<AppState>() {
         if (history_activity_recyclerview.adapter != null) {
             throw IllegalStateException("The ViewModel should be initialised first")
         }
+        injectDependencies()
         val vm: HistoryViewModel by viewModel()
         viewModel = vm
         viewModel.subscribe().observe(this@HistoryActivity, Observer<AppState> { renderData(it) })

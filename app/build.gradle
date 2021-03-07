@@ -23,6 +23,8 @@ android {
         sourceCompatibility Config.java_version
         targetCompatibility Config.java_version
     }
+
+    dynamicFeatures = [Modules.historyscreen]
 }
 
 dependencies {
@@ -31,11 +33,13 @@ dependencies {
     implementation project(Modules.model)
     implementation project(Modules.repository)
     implementation project(Modules.utils)
-    implementation project(Modules.historyscreen) //Feature
 
     //AndroidX
     implementation Tools.multidex
     implementation Design.appcompat
+
+    //Google Play libraries
+    implementation GooglePlay.googlePlayCore
 
     //Design
     //You should not use the com.android.support and com.google.android.material dependencies in your app at the same time

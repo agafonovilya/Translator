@@ -27,6 +27,9 @@ object Versions {
     //Tools
     const val multidex = "1.0.3"
 
+    //Google Play
+    const val googlePlayCore = "1.6.3"
+
     //Design
     const val appcompat = "1.1.0-rc01"
     const val material = "1.0.0"
@@ -68,6 +71,10 @@ object Versions {
 
 object Tools {
     const val multidex = "com.android.support:multidex:${Versions.multidex}"
+}
+
+object GooglePlay {
+    const val googlePlayCore = "com.google.android.play:core:${Versions.googlePlayCore}"
 }
 
 object Design {
@@ -115,3 +122,4 @@ object TestImpl {
     const val runner = "androidx.test:runner:${Versions.runner}"
     const val espresso = "androidx.test.espresso:espresso-core:${Versions.espressoCore}"
 }
+
