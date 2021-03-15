@@ -1,17 +1,15 @@
 package ru.geekbrains.repository
 
 import ru.geekbrains.model.data.AppState
-import ru.geekbrains.model.data.DataModel
-import ru.geekbrains.model.data.Meanings
-import ru.geekbrains.model.data.Translation
+import ru.geekbrains.model.data.dto.SearchResultDto
 import ru.geekbrains.repository.room.HistoryEntity
 
 
-fun mapHistoryEntityToSearchResult(list: List<HistoryEntity>): List<DataModel> {
-    val searchResult = ArrayList<DataModel>()
+fun mapHistoryEntityToSearchResult(list: List<HistoryEntity>): List<SearchResultDto> {
+    val searchResult = ArrayList<SearchResultDto>()
     if (!list.isNullOrEmpty()) {
         for (entity in list) {
-            searchResult.add(DataModel(entity.word, listOf(Meanings(Translation(entity.description), null))))
+            searchResult.add(SearchResultDto(entity.word, null))
         }
     }
     return searchResult
@@ -21,13 +19,10 @@ fun convertDataModelSuccessToEntity(appState: AppState): HistoryEntity? {
     return when (appState) {
         is AppState.Success -> {
             val searchResult = appState.data
-            if (searchResult.isNullOrEmpty() || searchResult[0].text.isNullOrEmpty()) {
+            if (searchResult.isNullOrEmpty() || searchResult[0].text.isBlank()) {
                 null
             } else {
-                searchResult[0].meanings?.get(0)?.translation?.let {
-                    HistoryEntity(searchResult[0].text!!, searchResult[0].meanings!![0].translation!!.translation)
-                } ?: HistoryEntity(searchResult[0].text!!, null)
-
+                HistoryEntity(searchResult[0].text, searchResult[0].meanings[0].translatedMeaning.translatedMeaning)
             }
         }
         else -> null

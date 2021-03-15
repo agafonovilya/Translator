@@ -6,10 +6,12 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_description.*
 import ru.geekbrains.translator.R
+import ru.geekbrains.utils.network.OnlineLiveData
 import ru.geekbrains.utils.network.isOnline
 import ru.geekbrains.utils.ui.AlertDialogFragment
 
@@ -52,18 +54,23 @@ class DescriptionActivity : AppCompatActivity() {
     }
 
     private fun startLoadingOrShowError() {
-        if (isOnline(applicationContext)) {
-            setData()
-        } else {
-            AlertDialogFragment.newInstance(
-                getString(R.string.dialog_title_device_is_offline),
-                getString(R.string.dialog_message_device_is_offline)
-            ).show(
-                supportFragmentManager,
-                DIALOG_FRAGMENT_TAG
-            )
-            stopRefreshAnimationIfNeeded()
-        }
+        OnlineLiveData(this).observe(
+                this@DescriptionActivity,
+                Observer<Boolean> {
+                    if(it) {
+                        setData()
+                    } else {
+                        AlertDialogFragment.newInstance(
+                                getString(R.string.dialog_title_device_is_offline),
+                                getString(R.string.dialog_message_device_is_offline)
+                        ).show(
+                                supportFragmentManager,
+                                DIALOG_FRAGMENT_TAG
+                        )
+                        stopRefreshAnimationIfNeeded()
+                    }
+                }
+        )
     }
 
     private fun stopRefreshAnimationIfNeeded() {

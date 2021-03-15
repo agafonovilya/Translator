@@ -1,30 +1,33 @@
 package ru.geekbrains.core
 
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.loading_layout.*
 import ru.geekbrains.core.viewmodel.BaseViewModel
 import ru.geekbrains.model.data.AppState
-import ru.geekbrains.model.data.DataModel
-import ru.geekbrains.utils.network.isOnline
+import ru.geekbrains.model.data.userdata.DataModel
+import ru.geekbrains.utils.network.OnlineLiveData
 import ru.geekbrains.utils.ui.AlertDialogFragment
+
+private const val DIALOG_FRAGMENT_TAG = "74a54328-5d62-46bf-ab6b-cbf5d8c79522"
 
 abstract class BaseActivity<T : AppState> : AppCompatActivity() {
 
     abstract val viewModel: BaseViewModel<T>
+    protected abstract val layoutRes: Int
+    protected var isNetworkAvailable: Boolean = true
 
-    protected var isNetworkAvailable: Boolean = false
-
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onCreate(savedInstanceState, persistentState)
-        isNetworkAvailable = isOnline(applicationContext)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(layoutRes)
+        subscribeToNetworkChange()
     }
 
     override fun onResume() {
         super.onResume()
-        isNetworkAvailable = isOnline(applicationContext)
         if (!isNetworkAvailable && isDialogNull()) {
             showNoInternetConnectionDialog()
         }
@@ -78,7 +81,7 @@ abstract class BaseActivity<T : AppState> : AppCompatActivity() {
         )
     }
 
-    protected fun showAlertDialog(title: String?, message: String?) {
+    private fun showAlertDialog(title: String?, message: String?) {
         AlertDialogFragment.newInstance(title, message).show(supportFragmentManager, DIALOG_FRAGMENT_TAG)
     }
 
@@ -86,10 +89,20 @@ abstract class BaseActivity<T : AppState> : AppCompatActivity() {
         return supportFragmentManager.findFragmentByTag(DIALOG_FRAGMENT_TAG) == null
     }
 
-    companion object {
-        private const val DIALOG_FRAGMENT_TAG = "74a54328-5d62-46bf-ab6b-cbf5d8c79522"
-    }
-
     abstract fun setDataToAdapter(data: List<DataModel>)
 
+    private fun subscribeToNetworkChange() {
+        OnlineLiveData(this).observe(
+                this@BaseActivity,
+                Observer<Boolean> {
+                    isNetworkAvailable = it
+                    if (!isNetworkAvailable) {
+                        Toast.makeText(
+                                this@BaseActivity,
+                                R.string.dialog_message_device_is_offline,
+                                Toast.LENGTH_LONG
+                        ).show()
+                    }
+                })
+    }
 }

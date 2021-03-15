@@ -6,7 +6,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.geekbrains.core.viewmodel.BaseViewModel
 import ru.geekbrains.model.data.AppState
-import ru.geekbrains.translator.utils.parseSearchResults
+import ru.geekbrains.translator.utils.parseOnlineSearchResults
 
 class MainViewModel (private val interactor: MainInteractor) :
     BaseViewModel<AppState>() {
@@ -24,7 +24,7 @@ class MainViewModel (private val interactor: MainInteractor) :
     }
 
     private suspend fun startInteractor(word: String, isOnline: Boolean) = withContext(Dispatchers.IO) {
-        _mutableLiveData.postValue(parseSearchResults(interactor.getData(word, isOnline)))
+        _mutableLiveData.postValue(parseOnlineSearchResults(interactor.getData(word, isOnline)))
     }
 
     override fun handleError(error: Throwable) {

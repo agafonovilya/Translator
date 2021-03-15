@@ -1,8 +1,8 @@
 package ru.geekbrains.historyscreen
 
 import ru.geekbrains.model.data.AppState
-import ru.geekbrains.model.data.DataModel
-import ru.geekbrains.model.data.Meanings
+import ru.geekbrains.model.data.userdata.DataModel
+import ru.geekbrains.model.data.userdata.Meaning
 
 fun parseLocalSearchResults(data: AppState): AppState {
     return AppState.Success(mapResult(data, false))
@@ -40,16 +40,19 @@ private fun getSuccessResultData(
     }
 }
 
-private fun parseOnlineResult(dataModel: DataModel, newDataModels: ArrayList<DataModel>) {
-    if (!dataModel.text.isNullOrBlank() && !dataModel.meanings.isNullOrEmpty()) {
-        val newMeanings = arrayListOf<Meanings>()
-        for (meaning in dataModel.meanings!!) {
-            if (meaning.translation != null && !meaning.translation!!.translation.isNullOrBlank()) {
-                newMeanings.add(Meanings(meaning.translation, meaning.imageUrl))
+private fun parseOnlineResult(searchDataModel: DataModel, newSearchDataModels: ArrayList<DataModel>) {
+    if (searchDataModel.text.isNotBlank() && searchDataModel.meanings.isNotEmpty()) {
+        val newMeanings = arrayListOf<Meaning>()
+        for (meaning in searchDataModel.meanings) {
+            if (meaning.translatedMeaning.translatedMeaning.isBlank()) {
+                newMeanings.add(Meaning(meaning.translatedMeaning, meaning.imageUrl)
+                )
             }
         }
         if (newMeanings.isNotEmpty()) {
-            newDataModels.add(DataModel(dataModel.text, newMeanings))
+            newSearchDataModels.add(
+                    DataModel(searchDataModel.text, newMeanings)
+            )
         }
     }
 }

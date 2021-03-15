@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ru.geekbrains.translator.R
 import kotlinx.android.synthetic.main.activity_main_recyclerview_item.view.*
-import ru.geekbrains.model.data.DataModel
+import ru.geekbrains.model.data.userdata.DataModel
 import ru.geekbrains.translator.utils.convertMeaningsToString
 
 class MainAdapter(private var onListItemClickListener: OnListItemClickListener) :
