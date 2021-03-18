@@ -1,7 +1,9 @@
 package ru.geekbrains.translator.view.main
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -96,6 +98,9 @@ class MainActivity : BaseActivity<AppState>() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.history_menu, menu)
+        // Находим нужную кнопку и меняем ей видимость в зависимости от OS
+        menu?.findItem(R.id.menu_screen_settings)?.isVisible =
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -126,6 +131,15 @@ class MainActivity : BaseActivity<AppState>() {
                     }
                 true
             }
+            R.id.menu_screen_settings -> {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    startActivityForResult(
+                            Intent(Settings.Panel.ACTION_INTERNET_CONNECTIVITY), 42
+                    )
+                }
+                true
+            }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
