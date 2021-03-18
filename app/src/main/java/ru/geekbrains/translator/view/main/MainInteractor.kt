@@ -1,22 +1,25 @@
 package ru.geekbrains.translator.view.main
 
-
-import io.reactivex.Observable
-import ru.geekbrains.translator.model.data.AppState
-import ru.geekbrains.translator.model.data.DataModel
-import ru.geekbrains.translator.model.repository.Repository
-import ru.geekbrains.translator.presenter.Interactor
+import ru.geekbrains.model.data.AppState
+import ru.geekbrains.repository.Repository
+import ru.geekbrains.repository.RepositoryLocal
+import ru.geekbrains.core.viewmodel.Interactor
+import ru.geekbrains.model.data.dto.SearchResultDto
+import ru.geekbrains.translator.utils.mapSearchResultToResult
 
 class MainInteractor(
-    private val remoteRepository: Repository<List<DataModel>>,
-    private val localRepository: Repository<List<DataModel>>
+        private val remoteRepository: Repository<List<SearchResultDto>>,
+        private val localRepository: RepositoryLocal<List<SearchResultDto>>
 ) : Interactor<AppState> {
 
-    override fun getData(word: String, fromRemoteSource: Boolean): Observable<AppState> {
-        return if (fromRemoteSource) {
-            remoteRepository.getData(word).map { AppState.Success(it) }
+    override suspend fun getData(word: String, fromRemoteSource: Boolean): AppState {
+        val appState: AppState
+        if (fromRemoteSource) {
+            appState = AppState.Success(mapSearchResultToResult(remoteRepository.getData(word)))
+            localRepository.saveToDB(appState)
         } else {
-            localRepository.getData(word).map { AppState.Success(it) }
+            appState = AppState.Success(mapSearchResultToResult(localRepository.getData(word)))
         }
+        return appState
     }
 }

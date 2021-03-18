@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_history"
+        android:title="@string/menu_title_history"
+        android:icon="@drawable/ic_history"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/menu_history_find"
+        android:title="@string/button_history_search"
+        android:icon="@drawable/ic_history_search"
+        app:showAsAction="always"
+        />
+    <item
+        android:id="@+id/menu_screen_settings"
+        android:title="@string/menu_title_settings"
+        android:icon="@drawable/ic_settings"
+        app:showAsAction="always"/>
+</menu>
